@@ -11,12 +11,12 @@ openai = openai.OpenAI(api_key= os.environ.get('OPENAI_API_KEY'))
 
 class OpenAiModel:
     def __init__(self):
-        ...
+        self.model = "gpt-3.5-turbo"
 
     def generate_conversation(self, user_message):
         try:
             response = openai.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=self.model,
                 messages=self.conversation_string(user_message),
             )
 
