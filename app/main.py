@@ -2,7 +2,6 @@ from flask import Flask, jsonify
 from flask_smorest import Api
 from dotenv import load_dotenv
 import os
-from db import db
 from routes import bp
 import logging
 
