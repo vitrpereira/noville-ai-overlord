@@ -68,6 +68,10 @@ noville-ai-overlord/
 │       └── openai_model.py
 │   └── config/
 │       └── utils.py
+│    └── connections/
+│       └── external_apis/
+│           └── external_api_client.py
+│           └── noville_api.py
 ├── tests (WIP)/
 │   └── test_ai_model.py
 ```
