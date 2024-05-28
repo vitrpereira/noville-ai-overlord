@@ -3,7 +3,7 @@ import openai
 from dotenv import load_dotenv, find_dotenv
 from flask import jsonify
 
-from models.head_prompt import HEAD_PROMPT
+from head_prompt import HEAD_PROMPT
 
 load_dotenv(find_dotenv())
 
