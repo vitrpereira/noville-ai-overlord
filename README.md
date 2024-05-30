@@ -60,7 +60,7 @@ To maintain code quality and consistency, please follow these guidelines:
 - Submitting a Pull Request
 - Fork the Repository: Fork the repository to your GitHub account.
 
-## Recommendation: use black
+#### Recommendation: use black
 
 Black is a code formatter for Python, guaranteeing code stardatization and organization.
 
