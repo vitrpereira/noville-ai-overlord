@@ -50,31 +50,6 @@ pip install -r requirements.txt
 python main.py
 ```
 
-### Project Structure
-Here is an overview of the project structure:
-
-```arduino
-noville-ai-overlord/
-│
-├── README.md
-├── requirements.txt
-│── .env.example
-│── db.py
-├── app/
-│   └── main.py
-│   └── routes.py
-│   └── resources/
-│       └── __init__.py
-│       └── openai_model.py
-│   └── config/
-│       └── utils.py
-│    └── connections/
-│       └── external_apis/
-│           └── external_api_client.py
-│           └── noville_api.py
-├── tests (WIP)/
-│   └── test_ai_model.py
-```
 
 ### Coding Guidelines
 To maintain code quality and consistency, please follow these guidelines:
@@ -84,6 +59,22 @@ To maintain code quality and consistency, please follow these guidelines:
 - Documentation: Update the documentation for any changes or new features. Ensure your code is well-documented.
 - Submitting a Pull Request
 - Fork the Repository: Fork the repository to your GitHub account.
+
+## Recommendation: use black
+
+Black is a code formatter for Python, guaranteeing code stardatization and organization.
+
+- Install black
+
+```shell
+pip install black
+```
+
+- Run it
+
+```shell
+black .
+```
 
 ### Contributing 
 - Create a Branch: Create a new branch for your feature or bug fix.
