@@ -95,7 +95,7 @@ git push origin feature-name
 
 Submit a Pull Request: Go to the original repository and submit a pull request.
 
-- Reporting Issues
+### Reporting Issues
 If you encounter any issues or have suggestions for improvements, please create an issue on the GitHub repository. Provide as much detail as possible to help us understand and address the issue.
 
 ## License
