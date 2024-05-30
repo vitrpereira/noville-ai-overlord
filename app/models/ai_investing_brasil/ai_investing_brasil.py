@@ -12,8 +12,7 @@ class AiInvestingBrasil:
     def __init__(self):
         self.openai_model = OpenAiModel()
         self.noville_api = NovilleApi()
-        # self.head_prompt = AI_INVESTING_BRAZIL_HEAD_PROMPT
-        self.head_prompt = "You're a friendly AI that answers ML questions over context with VectorSearch!"
+        self.head_prompt = AI_INVESTING_BRAZIL_HEAD_PROMPT
 
     def post_tweet(self, user_message):
         try:
