@@ -21,12 +21,7 @@ class OpenAiModel:
         system_prompt = self.head_prompt if head_prompt is None else head_prompt
 
         try:
-            # response = openai.chat.completions.create(
-            #     model=self.model, messages=self.build_answer(system_prompt, user_message)
-            # )
-
-            # assistant_answer = response.choices[0].message.content
-            assistant_answer = self.retrieve_context(user_message)
+            assistant_answer = self.retrieve_context(system_prompt, user_message)
             logger.info(f"ASSISTANT_ANSWER: {assistant_answer}")
             return assistant_answer
         except Exception as e:
@@ -41,7 +36,7 @@ class OpenAiModel:
         return self.conversation_string(system_prompt, user_message)
 
     def retrieve_context(self, user_message):
-        return self.pinecone_search.query(user_message)
+        return self.pinecone_search.query_engine(user_message)
 
     @staticmethod
     def conversation_string(system_prompt, user_message):
