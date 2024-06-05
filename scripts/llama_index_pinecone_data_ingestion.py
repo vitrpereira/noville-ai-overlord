@@ -16,7 +16,7 @@ import os
 
 load_dotenv(find_dotenv())
 
-DAFAULT_DOCS_DIR = "context_base"
+DAFAULT_DOCS_DIR = "scripts/context_base"
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 20
 

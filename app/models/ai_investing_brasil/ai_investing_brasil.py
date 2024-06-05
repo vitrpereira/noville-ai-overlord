@@ -16,7 +16,9 @@ class AiInvestingBrasil:
 
     def post_tweet(self, user_message):
         try:
-            assistant_answer = self.openai_model.generate_conversation(user_message)
+            assistant_answer = self.openai_model.generate_conversation(
+                user_message, self.head_prompt
+            )
             try:
                 logger.info("Trying to send tweet...")
                 self.noville_api.post_tweet(assistant_answer)

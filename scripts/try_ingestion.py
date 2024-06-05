@@ -27,7 +27,7 @@ if __name__ == "__main__":
         vector_store=vector_store, service_context=service_context
     )
 
-    query = "What does the first table of the article showcases?"
+    query = "Wha are Warren Buffet's investment principles?"
     query_engine = index.as_query_engine()
     response = query_engine.query(query)
 
