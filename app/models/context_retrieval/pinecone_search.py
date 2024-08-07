@@ -4,6 +4,8 @@ from pinecone import Pinecone
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core import VectorStoreIndex
 
+find_dotenv(load_dotenv())
+
 
 class PineconeSearch:
     def __init__(self):
@@ -16,7 +18,11 @@ class PineconeSearch:
         return query_eng.query(user_input)
 
     def chat_engine(self):
-        return self.get_index().as_chat_engine(chat_mode="context", verbose=True)
+        return self.get_index().as_chat_engine(
+            chat_mode="context", verbose=True
+            )
 
     def get_index(self) -> VectorStoreIndex:
-        return VectorStoreIndex.from_vector_store(vector_store=self.vector_store)
+        return VectorStoreIndex.from_vector_store(
+            vector_store=self.vector_store
+            )

@@ -1,9 +1,7 @@
 from models.openai_model import OpenAiModel
 from models.head_prompt import AI_INVESTING_BRAZIL_HEAD_PROMPT
 from connections.external_apis.noville_api import NovilleApi
-from models.context_retrieval.pinecone_search import PineconeSearch
 import logging
-import asyncio
 
 logger = logging.getLogger("AI-INVESTING-BR-MODULE")
 
