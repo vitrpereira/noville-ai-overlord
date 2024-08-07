@@ -46,7 +46,7 @@ class OpenAiModel:
             {"role": "user", "content": f"{user_message}"},
         ]
     
-    def transacription_client(self, file) -> str:
+    def transcription_client(self, file) -> str:
         audio_file = open(file, "rb")
         transcript = openai.audio.transcriptions.create(
             file=audio_file,
@@ -67,6 +67,7 @@ class OpenAiModel:
         return response.stream_to_file(output_dir)
     
     def translation_client(self, audio_file) -> str:
+        logging.info(f"[OPENAI][AUDIO CLIENT] - Starting translation to English from {audio_file}")
         audio_file= open(audio_file, "rb")
         translation = openai.audio.translations.create(
         model="whisper-1", 
