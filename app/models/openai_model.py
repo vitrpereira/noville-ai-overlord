@@ -45,33 +45,32 @@ class OpenAiModel:
             {"role": "system", "content": f"{system_prompt}"},
             {"role": "user", "content": f"{user_message}"},
         ]
-    
+
     def transcription_client(self, file) -> str:
         audio_file = open(file, "rb")
         transcript = openai.audio.transcriptions.create(
             file=audio_file,
             model="whisper-1",
             response_format="verbose_json",
-            timestamp_granularities=["word"]
-            )
+            timestamp_granularities=["word"],
+        )
 
         return transcript.text
 
     def text_to_speech_client(self, text_file, filename="speech.mp3") -> None:
         output_dir = self.base_audio_dir + filename
         response = openai.audio.speech.create(
-                model="tts-1",
-                voice="alloy",
-                input=text_file
-                )
+            model="tts-1", voice="alloy", input=text_file
+        )
         return response.stream_to_file(output_dir)
-    
+
     def translation_client(self, audio_file) -> str:
-        logging.info(f"[OPENAI][AUDIO CLIENT] - Starting translation to English from {audio_file}")
-        audio_file= open(audio_file, "rb")
+        logging.info(
+            f"[OPENAI][AUDIO CLIENT] - Starting translation to English from {audio_file}"
+        )
+        audio_file = open(audio_file, "rb")
         translation = openai.audio.translations.create(
-        model="whisper-1", 
-        file=audio_file
+            model="whisper-1", file=audio_file
         )
 
         return translation.text
