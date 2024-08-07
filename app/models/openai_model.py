@@ -19,7 +19,7 @@ class OpenAiModel:
         self.base_audio_dir = "app/models/audio_files/"
 
     def generate_conversation(self, user_message, head_prompt=None):
-        system_prompt = self.head_prompt if head_prompt is None else head_prompt
+        system_prompt = head_prompt if head_prompt else self.head_prompt
 
         try:
             assistant_answer = self.build_answer(system_prompt, user_message)
@@ -66,7 +66,7 @@ class OpenAiModel:
 
     def translation_client(self, audio_file) -> str:
         logging.info(
-            f"[OPENAI][AUDIO CLIENT] - Starting translation to English from {audio_file}"
+            f"[OPENAI][AUDIO CLIENT] - Starting translation from {audio_file}"
         )
         audio_file = open(audio_file, "rb")
         translation = openai.audio.translations.create(
