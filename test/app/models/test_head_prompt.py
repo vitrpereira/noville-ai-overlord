@@ -1,4 +1,7 @@
-from app.models.head_prompt import BASIC_HEAD_PROMPT, AI_INVESTING_BRAZIL_HEAD_PROMPT
+from app.models.head_prompt import (
+    BASIC_HEAD_PROMPT, 
+    AI_INVESTING_BRAZIL_HEAD_PROMPT
+)
 
 
 def test_basic_head_prompt():

@@ -8,7 +8,9 @@ load_dotenv(find_dotenv())
 class NovilleApi(ExternalApiClient):
     def __init__(self):
         self.noville_api_url = "https://noville-api.onrender.com"
-        self.headers = {"Authorization": f"{os.environ.get('NOVILLE_API_KEY')}"}
+        self.headers = {
+            "Authorization": f"{os.environ.get('NOVILLE_API_KEY')}"
+            }
         super().__init__(self.noville_api_url)
 
     def post_tweet(self, user_input):

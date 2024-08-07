@@ -3,7 +3,6 @@ from models.openai_model import OpenAiModel
 from models.ai_investing_brasil.ai_investing_brasil import AiInvestingBrasil
 from config.utils import require_api_key
 import logging
-import asyncio
 
 logger = logging.getLogger("app_log")
 bp = Blueprint("routes", __name__)
