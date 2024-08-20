@@ -16,8 +16,6 @@ class ExternalApiClient:
 
     @classmethod
     def post(cls, endpoint, data=None, headers=None):
-        response = requests.post(
-            endpoint, data=data, headers=headers
-        )
+        response = requests.post(endpoint, data=data, headers=headers)
         response.raise_for_status()
         return response.json()
