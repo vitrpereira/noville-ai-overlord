@@ -1,6 +1,6 @@
 from profiler import Profiler
 from openai_model import OpenAiModel
-from head_prompt import HEAD_PROMPT_INVESTMENT_HELPER
+from app.config.utils import retrieve_prompt
 
 class InvestmentBot:
     def __init__(self):
@@ -9,7 +9,7 @@ class InvestmentBot:
         self.openai_model = OpenAiModel()
         self.responses = {}
         self.current_question = None
-        self.head_prompt = HEAD_PROMPT_INVESTMENT_HELPER
+        self.head_prompt = retrieve_prompt('investment_bot')
         self.greeted = False
         self.completed = False  # Track if the conversation is complete
 
@@ -53,7 +53,7 @@ class InvestmentBot:
     def call_model(self, system_attachment, user_message):
         if self.completed:
             # Only send the final result, no additional prompts
-            system_prompt = f"PASS IT TO THE USER [RISK TOLERANCE RESULT] {system_attachment}"
+            system_prompt = f"PASS IT TO THE USER: [RISK TOLERANCE RESULT]: {system_attachment}"
         else:
             # Include the head prompt and additional prompt for ongoing questions
             system_prompt = f"{self.head_prompt}\n[ADDITIONAL PROMPT]: {system_attachment}"
