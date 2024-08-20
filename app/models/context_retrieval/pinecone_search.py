@@ -4,7 +4,8 @@ from pinecone import Pinecone
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core import VectorStoreIndex
 
-find_dotenv(load_dotenv())
+
+load_dotenv(find_dotenv())
 
 
 class PineconeSearch:
