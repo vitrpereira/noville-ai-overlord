@@ -1,18 +1,23 @@
 import requests
+import abc
 
 
 class ExternalApiClient:
-    def __init__(self, base_url):
-        self.base_url = base_url
+    """"
+    Parent class for all External APIs handling.
+    """
 
-    def get(self, endpoint, headers=None):
-        response = requests.get(f"{self.base_url}/{endpoint}", headers=headers)
+    @classmethod
+    def get(cls, endpoint, headers=None):
+        response = requests.get(endpoint, headers=headers)
         response.raise_for_status()
         return response.json()
 
-    def post(self, endpoint, data=None, headers=None):
+
+    @classmethod
+    def post(cls, endpoint, data=None, headers=None):
         response = requests.post(
-            f"{self.base_url}{endpoint}", data=data, headers=headers
+            endpoint, data=data, headers=headers
         )
         response.raise_for_status()
         return response.json()
