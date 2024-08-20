@@ -1,6 +1,6 @@
 
 
-class ProfilingQuestionaire:
+class Profiler:
     def __init__(self):
         ...
 
@@ -21,8 +21,7 @@ class ProfilingQuestionaire:
         
         return profile, total_score
     
-    @staticmethod
-    def questionaire():
+    def questionnaire(self):
         questions = {
             'time_horizon': 'How long do you plan to keep your money invested?',
             'investment_knowledge': 'How would you classify your investment knowledge?',
@@ -31,10 +30,10 @@ class ProfilingQuestionaire:
             'income_stability': 'How would you classify your income stability?',
             'liquidity_needs': 'How quickly you need would you need to retrieve your money back?',
         }
+
         return questions
 
-    @staticmethod
-    def scores():
+    def scores(self):
         scores = {
             'time_horizon': {
                 'Less than 1 year': 0,
@@ -53,14 +52,16 @@ class ProfilingQuestionaire:
             'risk_tolerance': {
                 'Sell everything': 0,
                 'Sell some investments': 10,
-                'Do nothing': 20,
-                'Buy more': 30
+                'Sell most of my investments': 20,
+                'Do nothing': 30,
+                'Buy more': 40
             },
             'investment_objectives': {
                 'Preserve my equity': 0,
                 'Income generation': 10, 
                 'Balanced growth': 20,
-                'Aggressive growth': 30
+                'Passive income': 30,
+                'Aggressive growth': 40
             },
             'income_stability': {
                 'Very unstable': 0,
@@ -70,10 +71,11 @@ class ProfilingQuestionaire:
                 'Very stable': 40
             },
             'liquidity_needs': {
-                'Very important': 0,
-                'Somewhat important': 10,
-                'Not very important': 20,
-                'Not important at all': 30
+                'As quick as possible': 0,
+                'I can wait but not much': 10,
+                'I can wait little bit more': 20,
+                'I can wait for a longer period': 30,
+                'I don\'t care about it': 40
             }
         }
 
