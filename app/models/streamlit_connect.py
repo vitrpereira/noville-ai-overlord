@@ -1,5 +1,6 @@
 import streamlit as st
 from context_retrieval.pinecone_search import PineconeSearch
+import os
 
 pinecone_search = PineconeSearch()
 
@@ -18,24 +19,23 @@ def streamlit():
         )
 
     st.set_page_config(
-        page_title="Talk to ML articles",
-        page_icon="⚛︎",
+        page_title="Investment profiler",
+        page_icon="$",
         layout="centered",
         initial_sidebar_state="auto",
         menu_items=None,
     )
-    st.title("Chat to ML articles ⚛︎")
+    st.title("Testing chat")
 
     if "messages" not in st.session_state.keys():
         st.session_state.messages = [
             {
                 "role": "assistant",
-                "content": "Ask me a question about Pedro Domingo's article \
-                    on Machine Learning!",
+                "content": "Let's analyse your investment profile! Please answer the following questions",
             }
         ]
 
-    if prompt := st.chat_input("Your question about ML"):
+    if prompt := st.chat_input("Answer:"):
         st.session_state.messages.append({"role": "user", "content": prompt})
 
     for message in st.session_state.messages:
