@@ -19,11 +19,7 @@ class PineconeSearch:
         return query_eng.query(user_input)
 
     def chat_engine(self):
-        return self.get_index().as_chat_engine(
-            chat_mode="context", verbose=True
-            )
+        return self.get_index().as_chat_engine(chat_mode="context", verbose=True)
 
     def get_index(self) -> VectorStoreIndex:
-        return VectorStoreIndex.from_vector_store(
-            vector_store=self.vector_store
-            )
+        return VectorStoreIndex.from_vector_store(vector_store=self.vector_store)

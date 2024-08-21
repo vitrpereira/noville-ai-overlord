@@ -20,23 +20,24 @@ class OpenAiModel:
         self.pinecone_search = PineconeSearch()
 
     def generate_conversation(self, user_message, head_prompt=None):
-        system_prompt = head_prompt if head_prompt else ''
+        system_prompt = head_prompt if head_prompt else ""
 
         try:
-            assistant_answer = openai.chat.completions.create(
-                model=self.model,
-                messages=self.conversation_string(
-                    system_prompt,
-                    user_message
+            assistant_answer = (
+                openai.chat.completions.create(
+                    model=self.model,
+                    messages=self.conversation_string(system_prompt, user_message),
                 )
-            ).choices[0].message.content
+                .choices[0]
+                .message.content
+            )
 
             logger.info(f"ASSISTANT_ANSWER: {assistant_answer}")
 
             Conversation.register_conversation(
                 bot_name=self.bot_name,
                 agent_answer=assistant_answer,
-                user_message=user_message
+                user_message=user_message,
             )
             return assistant_answer
         except Exception as e:
