@@ -1,13 +1,30 @@
+# Flask
 from flask import Flask
-from routes import bp
+from flask_migrate import Migrate
+
+# Tools
 import logging
+import os
+from dotenv import load_dotenv, find_dotenv
 
+# From app
+from app.routes import bp
+from app.models.db import db
 
-def app():
-
+def create_app():
     app = Flask(__name__)
-    logger = logging.getLogger(__name__)
+    load_dotenv(find_dotenv())
 
+    print(db)
+
+    app.config["API_TITLE"] = "noville-ai-overlord"
+    app.config["API_VERSION"] = "V1"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    db.init_app(app)
+    migrate = Migrate(app, db)
+
+    logger = logging.getLogger(__name__)
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -16,8 +33,10 @@ def app():
 
     app.register_blueprint(bp)
 
-    return app.run(debug=True)
+    with app.app_context():
+        db.create_all()
 
+    return app
 
 if __name__ == "__main__":
-    app()
+    create_app().run(debug=True, port=3000)

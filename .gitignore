@@ -9,3 +9,5 @@ __pycache__/
 .pytest*
 *.pdf
 .coverage
+.vscode
+streamlit_tester.py
