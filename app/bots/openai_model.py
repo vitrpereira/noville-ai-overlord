@@ -2,8 +2,7 @@ import os
 import openai
 from dotenv import load_dotenv, find_dotenv
 import logging
-from .context_retrieval.pinecone_search import PineconeSearch
-from .head_prompt import BASIC_HEAD_PROMPT
+from app.bots.context_retrieval.pinecone_search import PineconeSearch
 
 load_dotenv(find_dotenv())
 
@@ -14,12 +13,11 @@ logger = logging.getLogger("OpenAiModel")
 class OpenAiModel:
     def __init__(self):
         self.model = "gpt-3.5-turbo"
-        self.head_prompt = BASIC_HEAD_PROMPT
         self.pinecone_search = PineconeSearch()
 
 
     def generate_conversation(self, user_message, head_prompt=None):
-        system_prompt = head_prompt if head_prompt else self.head_prompt
+        system_prompt = head_prompt if head_prompt else ''
 
         try:
             assistant_answer = openai.chat.completions.create(

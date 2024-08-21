@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from bots.openai_model import OpenAiModel
-from config.utils import require_api_key
+from app.bots.openai_model import OpenAiModel
+from app.config.utils import require_api_key
 import logging
 
 logger = logging.getLogger("app_log")
