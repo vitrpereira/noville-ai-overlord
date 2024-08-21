@@ -7,9 +7,7 @@ load_dotenv(find_dotenv())
 
 class NovilleApi(ExternalApiClient):
     noville_api_url = "https://noville-api.onrender.com"
-    headers = {
-        "Authorization": f"{os.environ.get('NOVILLE_API_KEY')}"
-        }
+    headers = {"Authorization": f"{os.environ.get('NOVILLE_API_KEY')}"}
 
     @classmethod
     def post_tweet(cls, user_input):
@@ -17,15 +15,10 @@ class NovilleApi(ExternalApiClient):
         post_tweets_data = {"user_input": user_input}
 
         return super().post(
-            cls.noville_api_url + post_tweets_route, 
-            post_tweets_data, 
-            cls.headers
+            cls.noville_api_url + post_tweets_route, post_tweets_data, cls.headers
         )
 
     def retrive_user_info(cls):
         retrieve_user_info_route = "/x/retrieve_user_info"
 
-        return super().get(
-            retrieve_user_info_route, 
-            cls.headers
-        )
+        return super().get(retrieve_user_info_route, cls.headers)

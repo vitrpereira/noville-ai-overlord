@@ -16,20 +16,13 @@ class Conversation:
 
     @classmethod
     def register_conversation(
-            cls,
-            bot_name: str,
-            user_message: str,
-            agent_answer: str
+        cls, bot_name: str, user_message: str, agent_answer: str
     ) -> str:
-        cls.logger.info(
-            "[RegisterConversation] Starting to register conversation"
-        )
+        cls.logger.info("[RegisterConversation] Starting to register conversation")
 
         try:
             conversation = ConversationModel(
-                bot_name=bot_name,
-                user_message=user_message,
-                agent_answer=agent_answer
+                bot_name=bot_name, user_message=user_message, agent_answer=agent_answer
             )
 
             db.session.add(conversation)
@@ -38,9 +31,7 @@ class Conversation:
             cls.logger.info(
                 f"[RegisterConversation] Finishing to register conversation: {conversation}"
             )
-            cls.logger.info(
-                "[RegisterConversation] Finished registering conversation"
-            )
+            cls.logger.info("[RegisterConversation] Finished registering conversation")
 
             return "Conversation registered"
         except Exception as exc:

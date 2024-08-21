@@ -1,7 +1,8 @@
 import requests
 
+
 class ExternalApiClient:
-    """"
+    """ "
     Parent class for all External APIs handling.
     """
 
@@ -10,7 +11,6 @@ class ExternalApiClient:
         response = requests.get(endpoint, headers=headers)
         response.raise_for_status()
         return response.json()
-
 
     @classmethod
     def post(cls, endpoint, data=None, headers=None):

@@ -2,6 +2,7 @@ from profiler import Profiler
 from openai_model import OpenAiModel
 from app.config.utils import retrieve_prompt
 
+
 class InvestmentBot:
     def __init__(self):
         self.profiler = Profiler()
@@ -9,7 +10,7 @@ class InvestmentBot:
         self.openai_model = OpenAiModel()
         self.responses = {}
         self.current_question = None
-        self.head_prompt = retrieve_prompt('investment_bot')
+        self.head_prompt = retrieve_prompt("investment_bot")
         self.greeted = False
         self.completed = False  # Track if the conversation is complete
 
@@ -17,12 +18,13 @@ class InvestmentBot:
         if not self.greeted:
             self.greeted = True
             self.current_question = list(self.questions.keys())[0]
-            return self.call_model(self.build_question(self.current_question), user_message)
-        
+            return self.call_model(
+                self.build_question(self.current_question), user_message
+            )
+
         if self.completed:
             return self.call_model(
-                system_attachment=f"{self.risk_profile()}",
-                user_message=user_message
+                system_attachment=f"{self.risk_profile()}", user_message=user_message
             )
 
         if self.current_question and self.current_question not in self.responses:
@@ -46,22 +48,26 @@ class InvestmentBot:
             return self.current_question
         else:
             return None
-    
+
     def build_question(self, question):
         return f"QUESTION TO ASK: {self.questions[question]} OPTIONS TO PROVIDE: {self.get_options_for_question(question)}"
-    
+
     def call_model(self, system_attachment, user_message):
         if self.completed:
             # Only send the final result, no additional prompts
-            system_prompt = f"PASS IT TO THE USER: [RISK TOLERANCE RESULT]: {system_attachment}"
+            system_prompt = (
+                f"PASS IT TO THE USER: [RISK TOLERANCE RESULT]: {system_attachment}"
+            )
         else:
             # Include the head prompt and additional prompt for ongoing questions
-            system_prompt = f"{self.head_prompt}\n[ADDITIONAL PROMPT]: {system_attachment}"
-        
+            system_prompt = (
+                f"{self.head_prompt}\n[ADDITIONAL PROMPT]: {system_attachment}"
+            )
+
         return self.openai_model.generate_conversation(
-                system_prompt=system_prompt,
-                head_prompt=self.head_prompt,
-                user_message=user_message
+            system_prompt=system_prompt,
+            head_prompt=self.head_prompt,
+            user_message=user_message,
         )
 
     def update_responses(self, question, answer):
