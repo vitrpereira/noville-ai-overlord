@@ -8,8 +8,8 @@ import os
 from dotenv import load_dotenv, find_dotenv
 
 # From app
-from app.routes import bp
-from app.models.db import db
+from routes import bp
+from models.db import db
 
 def create_app():
     app = Flask(__name__)
