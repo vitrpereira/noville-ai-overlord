@@ -16,8 +16,6 @@ def create_app():
     app = Flask(__name__)
     load_dotenv(find_dotenv())
 
-    print(db)
-
     app.config["API_TITLE"] = "noville-ai-overlord"
     app.config["API_VERSION"] = "V1"
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
