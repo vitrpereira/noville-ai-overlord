@@ -20,7 +20,7 @@ class OpenAiModel:
         self.pinecone_search = PineconeSearch()
 
     def generate_conversation(self, user_message, head_prompt=None):
-        system_prompt = head_prompt if head_prompt else ""
+        system_prompt = head_prompt if head_prompt else self.head_prompt
 
         try:
             assistant_answer = (
