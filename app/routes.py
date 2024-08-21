@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from app.bots.openai_model import OpenAiModel
-from app.config.utils import require_api_key
+from bots.openai_model import OpenAiModel
+from config.utils import require_api_key
 import logging
 
 logger = logging.getLogger("app_log")
@@ -15,5 +15,5 @@ def generate_conversation():
 
     if not param or "message" not in data:
         return jsonify({"message": "You must input a message!"}), 400
-    conversation = OpenAiModel().generate_conversation(param)
-    return jsonify({"output": f"{conversation}"})
+    conversation = OpenAiModel("EndpointClient").generate_conversation(param)
+    return jsonify({"message": f"{conversation}"})
