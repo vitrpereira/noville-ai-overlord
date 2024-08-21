@@ -10,7 +10,7 @@ class InvestmentBot:
         self.openai_model = OpenAiModel()
         self.responses = {}
         self.current_question = None
-        self.head_prompt = retrieve_prompt("investment_bot")
+        self.head_prompt = retrieve_prompt("investment_helper")
         self.greeted = False
         self.completed = False  # Track if the conversation is complete
 
