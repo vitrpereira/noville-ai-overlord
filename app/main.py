@@ -22,7 +22,7 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
-    migrate = Migrate(app, db, command='migrate')
+    migrate = Migrate(app, db)
 
     logger = logging.getLogger(__name__)
     logging.basicConfig(
@@ -39,4 +39,4 @@ def create_app():
     return app
 
 if __name__ == "__main__":
-    create_app().run(debug=True)
+    create_app().run(debug=True, port=3000)
