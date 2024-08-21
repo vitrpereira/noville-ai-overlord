@@ -4,6 +4,7 @@ from dotenv import load_dotenv, find_dotenv
 import yaml
 
 load_dotenv(find_dotenv())
+bots_config_file = "app/config/bots_config.yml"
 
 
 def require_api_key(func):
@@ -19,10 +20,20 @@ def require_api_key(func):
     decorator.__name__ = func.__name__
     return decorator
 
+
 def retrieve_prompt(bot_name):
-    with open("bots_config.yml") as config:
+    with open(bots_config_file) as config:
         try:
             content = yaml.safe_load(config)
-            return content['bots'][bot_name]['head_prompt'][0]
+            return content["bots"]["prompts"][bot_name]["head_prompt"][0]
+        except yaml.YAMLError as exc:
+            raise Exception(f"An exception occurred while loading config files: {exc}")
+
+
+def openai_model_version():
+    with open(bots_config_file) as config:
+        try:
+            content = yaml.safe_load(config)
+            return content["bots"]["openai_model"]["model_version"][0]
         except yaml.YAMLError as exc:
             raise Exception(f"An exception occurred while loading config files: {exc}")

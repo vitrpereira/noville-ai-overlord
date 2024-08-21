@@ -4,6 +4,7 @@ from dotenv import load_dotenv, find_dotenv
 import logging
 from bots.context_retrieval.pinecone_search import PineconeSearch
 from models.conversation import Conversation
+from config.utils import retrieve_prompt, openai_model_version
 
 load_dotenv(find_dotenv())
 
@@ -11,10 +12,11 @@ openai = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 logger = logging.getLogger("OpenAiModel")
 
 
-class OpenAiModel():
+class OpenAiModel:
     def __init__(self, bot_name):
-        self.model = "gpt-3.5-turbo"
+        self.model = openai_model_version()
         self.bot_name = bot_name
+        self.head_prompt = retrieve_prompt("generic")
         self.pinecone_search = PineconeSearch()
 
     def generate_conversation(self, user_message, head_prompt=None):
