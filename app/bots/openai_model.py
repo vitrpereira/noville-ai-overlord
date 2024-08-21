@@ -30,9 +30,8 @@ class OpenAiModel:
                     user_message
                 )
             ).choices[0].message.content
-            logger.info(f"ASSISTANT_ANSWER: {assistant_answer}")
 
-            logger.info(f"Starting to commit conversation")
+            logger.info(f"ASSISTANT_ANSWER: {assistant_answer}")
 
             Conversation.register_conversation(
                 bot_name=self.bot_name,
