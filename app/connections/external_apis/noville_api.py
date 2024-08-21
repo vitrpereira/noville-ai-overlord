@@ -18,6 +18,7 @@ class NovilleApi(ExternalApiClient):
             cls.noville_api_url + post_tweets_route, post_tweets_data, cls.headers
         )
 
+    @classmethod
     def retrive_user_info(cls):
         retrieve_user_info_route = "/x/retrieve_user_info"
 
