@@ -1,5 +1,4 @@
 from app.models.db import db
-from datetime import datetime
 import logging
 
 
@@ -10,8 +9,6 @@ class ConversationModel(db.Model):
     bot_name = db.Column(db.String)
     user_message = db.Column(db.String)
     agent_answer = db.Column(db.String)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 class Conversation:
