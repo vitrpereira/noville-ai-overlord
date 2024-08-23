@@ -31,9 +31,6 @@ class Conversation:
             db.session.add(conversation)
             db.session.commit()
 
-            cls.logger.info(
-                f"[RegisterConversation] Finishing to register conversation: {conversation}"
-            )
             cls.logger.info("[RegisterConversation] Finished registering conversation")
 
             return "Conversation registered"
