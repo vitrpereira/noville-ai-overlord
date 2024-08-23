@@ -8,8 +8,9 @@ import os
 from dotenv import load_dotenv, find_dotenv
 
 # From app
-from routes import bp
-from models.db import db
+from app.config.config import config
+from app.routes import bp
+from app.models.db import db
 
 
 def create_app():
@@ -20,6 +21,7 @@ def create_app():
     app.config["API_VERSION"] = "V1"
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config.from_object(config[os.environ.get("FLASK_ENV", "development")])
     db.init_app(app)
     migrate = Migrate(app, db)
 
@@ -39,4 +41,4 @@ def create_app():
 
 
 if __name__ == "__main__":
-    create_app().run(debug=True, port=3000)
+    create_app().run(debug=True)

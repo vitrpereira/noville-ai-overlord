@@ -47,7 +47,7 @@ pip install -r requirements.txt
 5. Run the Application: To ensure everything is set up correctly, run the application.
 
 ```shell
-python main.py
+FLASK_ENV=environment flask run
 ```
 
 

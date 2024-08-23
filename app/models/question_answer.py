@@ -1,5 +1,6 @@
 from models.db import db
 
+
 class QuestionAnswerModel(db.Model):
     __tablename__ = "question_answers"
 
