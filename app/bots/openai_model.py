@@ -13,26 +13,32 @@ logger = logging.getLogger("OpenAiModel")
 
 
 class OpenAiModel:
-    def __init__(self, bot_name):
-        self.bot_name = bot_name
+    def __init__(self, bot_name: str):
+        self.bot_name = bot_name.lower()
         self.model = openai_model_version()
         self.head_prompt = retrieve_prompt("generic")
-        self.pinecone_search = PineconeSearch()
 
-    def generate_conversation(self, user_message, head_prompt=None):
+
+    def generate_conversation(self, 
+        user_message: str, head_prompt: str = None, w_rag: bool = False
+    ) -> str:
+        logger.debug(f"[USER MESSAGE] {user_message}")
         system_prompt = head_prompt if head_prompt else self.head_prompt
+        system_prompt +=  self._pinecone_context(user_message) if w_rag else ''
+        user_input = f"[USER MESSAGE] {user_message}"
 
         try:
             assistant_answer = (
                 openai.chat.completions.create(
                     model=self.model,
-                    messages=self.conversation_string(system_prompt, user_message),
+                    messages=self.conversation_string(system_prompt, user_input),
                 )
                 .choices[0]
                 .message.content
             )
 
-            logger.info(f"ASSISTANT_ANSWER: {assistant_answer}")
+            logger.info(f"[GenerateConversation] {user_input}")
+            logger.info(f"[GenerateConversation] ASSISTANT ANSWER: {assistant_answer}")
 
             Conversation.register_conversation(
                 bot_name=self.bot_name,
@@ -42,10 +48,15 @@ class OpenAiModel:
             return assistant_answer
         except Exception as e:
             raise e
+        
+    def _pinecone_context(self, user_message):
+        return "[CONTEXT]" + str(PineconeSearch.query_engine(user_message))
 
     @staticmethod
     def conversation_string(system_prompt, user_message):
-        return [
+        conversation = [
             {"role": "system", "content": f"{system_prompt}"},
             {"role": "user", "content": f"{user_message}"},
         ]
+
+        return conversation
