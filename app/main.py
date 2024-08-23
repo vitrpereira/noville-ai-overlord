@@ -21,7 +21,7 @@ def create_app():
     app.config["API_VERSION"] = "V1"
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config.from_object(config[os.environ.get('FLASK_ENV', 'development')])
+    app.config.from_object(config[os.environ.get("FLASK_ENV", "development")])
     db.init_app(app)
     migrate = Migrate(app, db)
 
