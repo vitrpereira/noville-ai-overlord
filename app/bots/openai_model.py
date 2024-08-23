@@ -2,9 +2,9 @@ import os
 import openai
 from dotenv import load_dotenv, find_dotenv
 import logging
-from bots.context_retrieval.pinecone_search import PineconeSearch
-from models.conversation import Conversation
-from config.utils import retrieve_prompt, openai_model_version
+from app.bots.context_retrieval.pinecone_search import PineconeSearch
+from app.models.conversation import Conversation
+from app.config.utils import retrieve_prompt, openai_model_version
 
 load_dotenv(find_dotenv())
 
