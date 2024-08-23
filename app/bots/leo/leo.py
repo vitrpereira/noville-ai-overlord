@@ -13,6 +13,5 @@ class Leo:
     def ask(self, user_message):
         return self.openai_model.generate_conversation(
             user_message=user_message,
-            head_prompt=self.head_prompt,
-            w_rag=True
+            head_prompt=self.head_prompt
         )
