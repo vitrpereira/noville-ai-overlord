@@ -22,22 +22,20 @@ class OpenAiModel:
     def generate_conversation(self, 
         user_message: str, head_prompt: str = None, w_rag: bool = False
     ) -> str:
-        logger.debug(f"[USER MESSAGE] {user_message}")
         system_prompt = head_prompt if head_prompt else self.head_prompt
-        system_prompt +=  self._pinecone_context(user_message) if w_rag else ''
+        system_prompt += self._pinecone_context(user_message) if w_rag else ''
         user_input = f"[USER MESSAGE] {user_message}"
 
         try:
             assistant_answer = (
                 openai.chat.completions.create(
                     model=self.model,
-                    messages=self.conversation_string(system_prompt, user_input),
+                    messages=self._conversation_string(system_prompt, user_input),
                 )
                 .choices[0]
                 .message.content
             )
 
-            logger.info(f"[GenerateConversation] {user_input}")
             logger.info(f"[GenerateConversation] ASSISTANT ANSWER: {assistant_answer}")
 
             Conversation.register_conversation(
@@ -53,7 +51,7 @@ class OpenAiModel:
         return "[CONTEXT]" + str(PineconeSearch.query_engine(user_message))
 
     @staticmethod
-    def conversation_string(system_prompt, user_message):
+    def _conversation_string(system_prompt, user_message):
         conversation = [
             {"role": "system", "content": f"{system_prompt}"},
             {"role": "user", "content": f"{user_message}"},
