@@ -19,6 +19,7 @@ def generate_conversation():
     conversation = OpenAiModel("EndpointClient").generate_conversation(param)
     return jsonify({"message": f"{conversation}"})
 
+
 @bp.route("/overlord/test_leo", methods=["POST"])
 @require_api_key
 def test_leo():

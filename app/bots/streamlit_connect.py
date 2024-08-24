@@ -1,6 +1,5 @@
 import streamlit as st
 from context_retrieval.pinecone_search import PineconeSearch
-import os
 
 pinecone_search = PineconeSearch()
 
@@ -31,7 +30,8 @@ def streamlit():
         st.session_state.messages = [
             {
                 "role": "assistant",
-                "content": "Let's analyse your investment profile! Please answer the following questions",
+                "content": "Let's analyse your investment profile! \
+                Please answer the following questions",
             }
         ]
 

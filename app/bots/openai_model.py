@@ -18,9 +18,11 @@ class OpenAiModel:
         self.model = openai_model_version()
         self.head_prompt = retrieve_prompt("generic")
 
-
-    def generate_conversation(self, 
-        user_message: str, head_prompt: str = None, w_rag: bool = False
+    def generate_conversation(
+            self,
+            user_message: str,
+            head_prompt: str = None,
+            w_rag: bool = False
     ) -> str:
         system_prompt = head_prompt if head_prompt else self.head_prompt
         system_prompt += self._pinecone_context(user_message) if w_rag else ''
@@ -30,13 +32,17 @@ class OpenAiModel:
             assistant_answer = (
                 openai.chat.completions.create(
                     model=self.model,
-                    messages=self._conversation_string(system_prompt, user_input),
+                    messages=self._conversation_string(
+                        system_prompt, user_input
+                    ),
                 )
                 .choices[0]
                 .message.content
             )
 
-            logger.info(f"[GenerateConversation] ASSISTANT ANSWER: {assistant_answer}")
+            logger.info(
+                f"[GenerateConversation] ASSISTANT ANSWER: {assistant_answer}"
+            )
 
             Conversation.register_conversation(
                 bot_name=self.bot_name,
@@ -46,7 +52,7 @@ class OpenAiModel:
             return assistant_answer
         except Exception as e:
             raise e
-        
+
     def _pinecone_context(self, user_message):
         return "[CONTEXT]" + str(PineconeSearch.query_engine(user_message))
 

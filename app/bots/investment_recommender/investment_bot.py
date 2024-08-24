@@ -24,10 +24,14 @@ class InvestmentBot:
 
         if self.completed:
             return self.call_model(
-                system_attachment=f"{self.risk_profile()}", user_message=user_message
+                system_attachment=f"{self.risk_profile()}",
+                user_message=user_message
             )
 
-        if self.current_question and self.current_question not in self.responses:
+        if (
+            self.current_question
+            and self.current_question not in self.responses
+        ):
             self.update_responses(self.current_question, user_message)
             next_question = self.ask_next_question()
 
@@ -41,7 +45,9 @@ class InvestmentBot:
             return self.call_model(response_message, user_message)
 
     def ask_next_question(self):
-        unanswered_questions = [q for q in self.questions if q not in self.responses]
+        unanswered_questions = [
+            q for q in self.questions if q not in self.responses
+            ]
 
         if unanswered_questions:
             self.current_question = unanswered_questions[0]
@@ -50,16 +56,17 @@ class InvestmentBot:
             return None
 
     def build_question(self, question):
-        return f"QUESTION TO ASK: {self.questions[question]} OPTIONS TO PROVIDE: {self.get_options_for_question(question)}"
+        return f"QUESTION TO ASK: {self.questions[question]} \
+                OPTIONS TO PROVIDE: {self.get_options_for_question(question)}"
 
     def call_model(self, system_attachment, user_message):
         if self.completed:
             # Only send the final result, no additional prompts
             system_prompt = (
-                f"PASS IT TO THE USER: [RISK TOLERANCE RESULT]: {system_attachment}"
+                f"PASS IT TO THE USER: \
+                [RISK TOLERANCE RESULT]: {system_attachment}".strip()
             )
         else:
-            # Include the head prompt and additional prompt for ongoing questions
             system_prompt = (
                 f"{self.head_prompt}\n[ADDITIONAL PROMPT]: {system_attachment}"
             )
@@ -80,5 +87,8 @@ class InvestmentBot:
         return ""
 
     def risk_profile(self):
-        profile, risk_score = self.profiler.calculate_risk_profile(self.responses)
-        return f"The user risk profile is: '{profile}'. Their risk score: {risk_score}."
+        profile, risk_score = self.profiler.calculate_risk_profile(
+            self.responses
+            )
+        return f"The user risk profile is: '{profile}'. \
+                Their risk score: {risk_score}."

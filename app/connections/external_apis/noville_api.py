@@ -15,7 +15,8 @@ class NovilleApi(ExternalApiClient):
         post_tweets_data = {"user_input": user_input}
 
         return super().post(
-            cls.noville_api_url + post_tweets_route, post_tweets_data, cls.headers
+            cls.noville_api_url + post_tweets_route, post_tweets_data,
+            cls.headers
         )
 
     @classmethod

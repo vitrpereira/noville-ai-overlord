@@ -10,7 +10,9 @@ bots_config_file = "app/config/bots_config.yml"
 def require_api_key(func):
     def decorator(*args, **kwargs):
         api_key = request.headers.get("x-api-key")
-        if not api_key or api_key != os.environ.get("NOVILLE_AI_OVERLORD_API_KEY"):
+        if not api_key or api_key != os.environ.get(
+            "NOVILLE_AI_OVERLORD_API_KEY"
+        ):
             response = jsonify({"message": "Invalid or missing API key"}), 401
             return response
         return func(*args, **kwargs)
@@ -25,7 +27,9 @@ def retrieve_prompt(bot_name):
             content = yaml.safe_load(config)
             return content["bots"]["prompts"][bot_name]["head_prompt"][0]
         except yaml.YAMLError as exc:
-            raise Exception(f"An exception occurred while loading config files: {exc}")
+            raise Exception(
+                f"An exception occurred while loading config files: {exc}"
+            )
 
 
 def openai_model_version():
@@ -34,4 +38,6 @@ def openai_model_version():
             content = yaml.safe_load(config)
             return content["bots"]["openai_model"]["model_version"][0]
         except yaml.YAMLError as exc:
-            raise Exception(f"An exception occurred while loading config files: {exc}")
+            raise Exception(
+                f"An exception occurred while loading config files: {exc}"
+            )

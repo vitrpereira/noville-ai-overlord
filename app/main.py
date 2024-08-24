@@ -23,7 +23,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config.from_object(config[os.environ.get("FLASK_ENV", "development")])
     db.init_app(app)
-    migrate = Migrate(app, db)
+    migrate = Migrate(app, db)  # noqa: F841
 
     logger = logging.getLogger(__name__)
     logging.basicConfig(

@@ -9,6 +9,7 @@ import logging
 load_dotenv(find_dotenv())
 logger = logging.getLogger("PineconeSearch")
 
+
 class PineconeSearch:
     pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
     pc_index = pc.Index(os.environ["PINECONE_INDEX"])
@@ -19,7 +20,6 @@ class PineconeSearch:
         query_eng = cls._get_index().as_query_engine()
         return query_eng.query(user_message)
 
-
     @classmethod
     def chat_engine(cls, user_message):
         response = cls._get_index().as_chat_engine(
@@ -29,8 +29,9 @@ class PineconeSearch:
                 )
         logger.info(f"[CHAT ENGINE] Response: {response}")
         return response
-    
 
     @staticmethod
     def _get_index() -> VectorStoreIndex:
-        return VectorStoreIndex.from_vector_store(vector_store=PineconeSearch.vector_store)
+        return VectorStoreIndex.from_vector_store(
+            vector_store=PineconeSearch.vector_store
+            )
