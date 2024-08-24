@@ -11,7 +11,9 @@ class ConversationModel(db.Model):
     user_message = db.Column(db.String)
     agent_answer = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
 
 class Conversation(Base):
@@ -21,17 +23,23 @@ class Conversation(Base):
     def register_conversation(
         cls, bot_name: str, user_message: str, agent_answer: str
     ) -> str:
-        cls.logger.info("[RegisterConversation] Starting to register conversation")
+        cls.logger.info(
+            "[RegisterConversation] Starting to register conversation"
+        )
 
         try:
             conversation = ConversationModel(
-                bot_name=bot_name, user_message=user_message, agent_answer=agent_answer
+                bot_name=bot_name,
+                user_message=user_message,
+                agent_answer=agent_answer
             )
 
             db.session.add(conversation)
             db.session.commit()
 
-            cls.logger.info("[RegisterConversation] Finished registering conversation")
+            cls.logger.info(
+                "[RegisterConversation] Finished registering conversation"
+            )
 
             return "Conversation registered"
         except Exception as exc:

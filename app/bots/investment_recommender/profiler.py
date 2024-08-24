@@ -20,12 +20,18 @@ class Profiler:
 
     def questionnaire(self):
         questions = {
-            "time_horizon": "How long do you plan to keep your money invested?",
-            "investment_knowledge": "How would you classify your investment knowledge?",
-            "risk_tolerance": "Let's say your investments drop by 25%. What would you do?",
-            "investment_objectives": "What do you want to achieve with your investments?",
-            "income_stability": "How would you classify your income stability?",
-            "liquidity_needs": "How quickly you need would you need to retrieve your money back?",
+            "time_horizon": "How long do you plan to keep your money \
+            invested?",
+            "investment_knowledge": "How would you classify your investment \
+            knowledge?",
+            "risk_tolerance": "Let's say your investments drop by 25%. \
+            What would you do?",
+            "investment_objectives": "What do you want to achieve with your \
+            investments?",
+            "income_stability": "How would you classify your income \
+                stability?",
+            "liquidity_needs": "How quickly you need would you need to \
+            retrieve your money back?",
         }
 
         return questions
