@@ -6,6 +6,8 @@ import os
 db = SQLAlchemy()
 
 load_dotenv(find_dotenv())
+
+
 class Base:
     postgres = os.environ.get('PRODUCTION_DATABASE_URI')
 
