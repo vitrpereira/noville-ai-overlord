@@ -1,12 +1,6 @@
-from app.models.db import db
+from app.models.db import db, Base
 from datetime import datetime
 import logging
-from sqlalchemy import create_engine, text
-from dotenv import load_dotenv, find_dotenv
-import os
-
-
-load_dotenv(find_dotenv())
 
 
 class ConversationModel(db.Model):
@@ -20,9 +14,8 @@ class ConversationModel(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
-class Conversation:
+class Conversation(Base):
     logger = logging.getLogger("[ConversationModel]")
-    postgres = os.environ.get('PRODUCTION_DATABASE_URI')
 
     @classmethod
     def register_conversation(
@@ -43,24 +36,3 @@ class Conversation:
             return "Conversation registered"
         except Exception as exc:
             raise exc
-
-    
-    @classmethod
-    def leo_conversations(cls):
-        sql = """
-        SELECT *
-        FROM conversations
-        WHERE bot_name = 'leo'
-        """.strip()
-
-        return cls._sql_engine(sql)
-
-    @classmethod
-    def _sql_engine(cls, query):
-        engine = create_engine(cls.postgres)
-
-        with engine.connect() as con:
-            rs = con.execute(text(query))
-            cols = rs.keys()
-
-            return [dict(zip(cols, row)) for row in rs.fetchall()]
