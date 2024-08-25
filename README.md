@@ -44,7 +44,7 @@ Install the necessary dependencies from the `requirements.txt` file.
 pip install -r requirements.txt
 ```
 
-5. Run the Application: To ensure everything is set up correctly, run the application.
+5. Run the Application:
 
 ```shell
 FLASK_ENV=environment flask run
@@ -60,20 +60,14 @@ To maintain code quality and consistency, please follow these guidelines:
 - Submitting a Pull Request
 - Fork the Repository: Fork the repository to your GitHub account.
 
-#### Recommendation: use black
+#### Use flake8
 
-Black is a code formatter for Python, guaranteeing code stardatization and organization.
+When opening a PR, a flake8 CI will run to check if is everything up to coding standards. To standardize your contributions to PEP8's guideline, use flake8.
 
-- Install black
-
-```shell
-pip install black
-```
-
-- Run it
+Run the command below in your terminal, and adjust your code to flake8 point outs accordingly.
 
 ```shell
-black .
+flake8 app/
 ```
 
 ### Contributing 
