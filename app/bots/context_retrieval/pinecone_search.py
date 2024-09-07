@@ -20,16 +20,6 @@ class PineconeSearch:
         query_eng = cls._get_index().as_query_engine()
         return query_eng.query(user_message)
 
-    @classmethod
-    def chat_engine(cls, user_message):
-        response = cls._get_index().as_chat_engine(
-            chat_mode="context", verbose=True
-            ).chat(
-                message=user_message
-                )
-        logger.info(f"[CHAT ENGINE] Response: {response}")
-        return response
-
     @staticmethod
     def _get_index() -> VectorStoreIndex:
         return VectorStoreIndex.from_vector_store(
