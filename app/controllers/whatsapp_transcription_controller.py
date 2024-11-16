@@ -8,6 +8,7 @@ import os
 from app.lib.audio_processor import AudioProcessor
 from app.models.user import User
 from app.models.product import Product
+from functools import cached_property
 
 load_dotenv(find_dotenv())
 logger = logging.getLogger(__name__)
@@ -39,9 +40,6 @@ class WhatsappTranscriptionController(MethodView):
 
         try:
             phone_number = self._get_phone(data)
-            failed_message = "Ops, nosso serviço está indisponível no momento"
-            failed_message += " e não conseguimos processar sua mensagem."
-            failed_message += "\nPor favor, tente novamente em alguns instantes."
 
             if self._first_interaction(data, phone_number):
                 return '', 200
@@ -52,7 +50,9 @@ class WhatsappTranscriptionController(MethodView):
                 message = self._process_text_message(data)
             else:
                 logger.error(f"{log_prefix} Unhandled event type: {data}")
-                message = failed_message
+                message = "Ops! Não podemos processar ainda este tipo de conteúdo."
+                message += " Mas não se preocupe, já estamos trabalhando para isso!"
+                message += "\n\nPor hora, você pode enviar ou encaminhar um áudio, e a gente transforma em texto pra você! 😊"
 
             self.send_whatsapp_text_message(
                 phone_number,
@@ -63,49 +63,11 @@ class WhatsappTranscriptionController(MethodView):
             logger.error(f"{log_prefix} Error: {e}")
             self.send_whatsapp_text_message(
                 phone_number,
-                failed_message
+                self._failed_message()
             )
 
             return '', 200
-
-    def _first_interaction(self, data, phone_number: str):
-        product_id = Product.get_product_by_name(self.product_name).id
-
-        if User.exists_user_by_phone_number_and_product_id(
-            phone_number, 
-            product_id
-        ):
-            logger.info(
-                f"User with phone number: '{phone_number}' already registered for '{self.product_name}' product"
-            )
-            return False
-
-        user_name = self._get_user_name(data)
-
-        User.register_user(
-            phone_number,
-            user_name,
-            product_id
-        )
-
-        welcome_message = f"Olá, *{user_name}*! Seja bem-vindo ao bot de transcrição de áudio para texto da Noville!"
-        welcome_message += "\nPara utilizar o serviço, basta enviar ou encaminhar um áudio para este número."
         
-        # Send welcome message
-        self.send_whatsapp_text_message(
-            phone_number,
-            welcome_message
-        )
-
-        # Send audio message if user sends one in the first interaction
-        if self._is_audio_message(data):
-            self.send_whatsapp_text_message(
-                phone_number,
-                self._process_audio_message(data)
-            )
-
-        return True
-
     def send_whatsapp_text_message(self, phone_number, text=''):
         phone_number_id = os.environ.get('WHATSAPP_PHONE_NUMBER_ID')
 
@@ -138,6 +100,47 @@ class WhatsappTranscriptionController(MethodView):
 
         return ""
 
+    def _first_interaction(self, data, phone_number: str):
+
+        if User.exists_user_by_phone_number_and_product_id(
+            phone_number, 
+            self._product_id
+        ):
+            logger.info(
+                f"User with phone number: '{phone_number}' already registered for '{self.product_name}' product"
+            )
+            return False
+
+        user_name = self._get_user_name(data)
+
+        User.register_user(
+            phone_number,
+            user_name,
+            self._product_id
+        )
+
+        welcome_message = f"Olá, *{user_name}*! Seja bem-vindo ao bot de transcrição de áudio para texto da Noville!"
+        welcome_message += "\nPara utilizar o serviço, basta enviar ou encaminhar um áudio para este número."
+        
+        # Send welcome message
+        self.send_whatsapp_text_message(
+            phone_number,
+            welcome_message
+        )
+
+        # Send audio message if user sends one in the first interaction
+        if self._is_audio_message(data):
+            self.send_whatsapp_text_message(
+                phone_number,
+                self._process_audio_message(data)
+            )
+
+        return True
+    
+    @cached_property
+    def _product_id(self):
+        return Product.get_product_by_name(self.product_name).id
+
     def _process_audio_message(self, data):
         media_id = self._webhook_message_path(data)['audio']['id']
         audio_file = AudioProcessor.download_whatsapp_audio(media_id)
@@ -160,8 +163,8 @@ class WhatsappTranscriptionController(MethodView):
     def _process_text_message(self, data):
         if self._is_message_webhook(data):
             if 'text' in self._webhook_message_path(data):
-                message = "Ops! Parece que você enviou uma mensagem de texto. Por favor, *envie* ou *encaminhe* sua mensagem como um áudio."
-                message += "\n\nPor curiosidade, sabia que sua mensagem em mandarim fica assim? ⛩️🧧🥢"
+                message = "Ops! Parece que você enviou uma mensagem de texto. Por enquanto, podemos te ajudar somente com mensagens de *áudio*."
+                message += "\n\nMas por curiosidade, sabia que sua mensagem em mandarim fica assim? ⛩️🧧🥢"
                 message += "\n\n"
 
                 message += self.open_ai.create_message(
@@ -216,6 +219,13 @@ class WhatsappTranscriptionController(MethodView):
     
     def _webhook_message_path(self, data):
         return self._basic_data_path(data)['messages'][0]
+    
+    @staticmethod
+    def _failed_message():
+        failed_message = "Ops, nosso serviço está indisponível no momento e não conseguimos processar sua mensagem."
+        failed_message += "\nPor favor, tente novamente em alguns instantes."
+
+        return failed_message
 
 blp.add_url_rule(
     '/overlord/whatsapp/transcription',
