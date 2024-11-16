@@ -85,13 +85,17 @@ class WhatsappTranscriptionController(MethodView):
             user_name,
             product_id
         )
+
+        welcome_message = f"Olá, *{user_name}*! Seja bem-vindo ao bot de transcrição de áudio para texto da Noville!"
+        welcome_message += "\nPara utilizar o serviço, basta enviar ou encaminhar um áudio para este número."
         
         # Send welcome message
         self.send_whatsapp_text_message(
             phone_number,
-            f"Olá, *{user_name}*! Seja bem-vindo ao bot de transcrição de áudio para texto da Noville! Para começar, por favor, envie ou encaminhe um áudio para mim."
+            welcome_message
         )
 
+        # Send audio message if user sends one in the first interaction
         if self._is_audio_message(data):
             self.send_whatsapp_text_message(
                 phone_number,
