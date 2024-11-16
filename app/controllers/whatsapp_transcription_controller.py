@@ -11,7 +11,7 @@ from app.models.product import Product
 from functools import cached_property
 
 load_dotenv(find_dotenv())
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("WhatsappTranscriptionController")
 blp = Blueprint("WhatsappTranscriptionController", __name__)
 log_prefix = "[WhatsappTranscriptionController]"
 
@@ -49,7 +49,7 @@ class WhatsappTranscriptionController(MethodView):
             elif self._is_text_message(data):
                 message = self._process_text_message(data)
             else:
-                logger.error(f"{log_prefix} Unhandled event type: {data}")
+                logger.error(f"Unhandled event type: {data}")
                 message = "Ops! Não podemos processar ainda este tipo de conteúdo."
                 message += " Mas não se preocupe, já estamos trabalhando para isso!"
                 message += "\n\nPor hora, você pode enviar ou encaminhar um áudio, e a gente transforma em texto pra você! 😊"
@@ -60,7 +60,7 @@ class WhatsappTranscriptionController(MethodView):
             )
             return '', 200
         except Exception as e:
-            logger.error(f"{log_prefix} Error: {e}")
+            logger.error(f"Error: {e}")
             self.send_whatsapp_text_message(
                 phone_number,
                 self._failed_message()
@@ -119,15 +119,7 @@ class WhatsappTranscriptionController(MethodView):
             self._product_id
         )
 
-        welcome_message = f"Olá, *{user_name}*! Seja bem-vindo ao bot de transcrição de áudio para texto da Noville!"
-        welcome_message += "\nPara utilizar o serviço, basta enviar ou encaminhar um áudio para este número."
-        
-        # Send welcome message
-        self.send_whatsapp_text_message(
-            phone_number,
-            welcome_message
-        )
-
+        self.send_welcome_message(phone_number, user_name)
         # Send audio message if user sends one in the first interaction
         if self._is_audio_message(data):
             self.send_whatsapp_text_message(
@@ -137,6 +129,18 @@ class WhatsappTranscriptionController(MethodView):
 
         return True
     
+    def send_welcome_message(self, phone_number, user_name):
+        welcome_message = f"Olá, *{user_name}*! Seja bem-vindo ao bot de transcrição de áudio para texto da Noville!"
+        welcome_message += "\n\nPara utilizar o serviço, basta enviar ou encaminhar um áudio para este número."
+        
+        # Send welcome message
+        self.send_whatsapp_text_message(
+            phone_number,
+            welcome_message
+        )
+
+        return ""
+    
     @cached_property
     def _product_id(self):
         return Product.get_product_by_name(self.product_name).id
@@ -144,19 +148,17 @@ class WhatsappTranscriptionController(MethodView):
     def _process_audio_message(self, data):
         media_id = self._webhook_message_path(data)['audio']['id']
         audio_file = AudioProcessor.download_whatsapp_audio(media_id)
-
-        fail_message = "Ops! Parece que houve um problema ao processar seu áudio. Tente novamente em alguns instantes."
         
         if audio_file:
             try:
                 transcription = self.open_ai.transcribe_audio(audio_file)
                 message = "Aqui está a transcrição do seu áudio ✨:\n\n"
                 message += transcription
-            except OpenAi.FailedToTrancribeAudioError as e:
-                logger.error(f"{log_prefix} {str(e)}")
-                message = fail_message
+            except OpenAi.FailedToTranscribeAudioError as e:
+                logger.error(f"Error: {str(e)}")
+                message = self._failed_message()
         else:
-            message = fail_message
+            message = self._failed_message()
 
         return message
     
@@ -180,7 +182,7 @@ class WhatsappTranscriptionController(MethodView):
         if self._is_event_status_webhook(data):
             if 'statuses' in (data_path := self._basic_data_path(data)):
                 event = data_path['statuses'][0]['status']
-                logger.info("[EventWebHook]: Message was '{event}'")
+                logger.info(f"[EventWebHook]: Message was '{event}'")
 
                 return event
             return ''

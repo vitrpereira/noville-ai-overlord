@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Noville</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+    <script src="https://unpkg.com/imask"></script>
+</head>
+<body>
+    <div class="register-container">
+        <nav>
+            <a href="{{ url_for('landing_page.index') }}" class="logo">NOVILLE</a>
+        </nav>
+
+        <div class="register-content">
+            <h1>Cadastre-se</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('register.register_user') }}">
+                <div class="form-group">
+                    <label for="name">Nome completo</label>
+                    <input type="text" id="name" name="name" 
+                        placeholder="Julia Silva" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone_number">Número de telefone</label>
+                    <input type="tel" id="phone_number" name="phone_number" 
+                        placeholder="+55 (11) 99999-9999" required>
+                    <small class="input-hint">Formato: +55 (11) 99999-9999</small>
+                </div>
+
+                <button type="submit" class="submit-button">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var phoneInput = document.getElementById('phone_number');
+            var maskOptions = {
+                mask: '+55 (00) 00000-0000'
+            };
+            var mask = IMask(phoneInput, maskOptions);
+            
+            // Form validation
+            document.querySelector('form').addEventListener('submit', function(e) {
+                // Get the raw value without mask
+                const rawValue = mask.unmaskedValue;
+                
+                // Check if we have the correct number of digits (11 for BR number without country code)
+                // Note: mask.unmaskedValue will not include the +55
+                if (rawValue.length !== 11) {
+                    e.preventDefault();
+                    alert('Por favor, insira um número de telefone válido no formato correto: +55 (XX) XXXXX-XXXX');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

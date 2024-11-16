@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem vindo a Noville!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing_page.css') }}">
+</head>
+<body>
+
+    <main>
+        <section id="hero">
+            <nav>
+                <div class="logo">NOVILLE</div>
+            </nav>
+            <div class="hero-content">
+                <h1>Olá, Noville!</h1>
+                <p>Se cadastre para começar a usar agora mesmo do seu WhatsApp</p>
+                <a href="/register" class="cta-button">Se cadastre!</a>
+            </div>
+        </section>
+
+        <section id="features">
+            <h2>Conheça nossos recursos</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="feature-icon">🎈</i>
+                    <h3>Rápido e fácil</h3>
+                    <p>Se cadastre e comece a usar agora mesmo</p>
+                </div>
+                <div class="feature-card">
+                    <i class="feature-icon">🔒</i>
+                    <h3>É segredo seu!</h3>
+                    <p>Não registramos ou vemos suas conversas enviadas</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Noville Inc. All rights reserved.</p>
+    </footer>
+</body>
+</html> 

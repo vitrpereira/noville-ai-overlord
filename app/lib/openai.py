@@ -10,7 +10,7 @@ openai = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 class OpenAi:
     class OpenAiModelError(Exception): pass
-    class FailedToTrancribeAudioError(OpenAiModelError): pass
+    class FailedToTranscribeAudioError(OpenAiModelError): pass
 
     def __init__(self):
         self.openai = openai
@@ -28,7 +28,7 @@ class OpenAi:
             return response
         except Exception as e:
             logger.error(f"Error transcribing audio: {e}")
-            raise self.FailedToTrancribeAudioError(f"Failed to transcribe audio: {str(e)}")
+            raise self.FailedToTranscribeAudioError(f"Failed to transcribe audio: {str(e)}")
 
     def create_message(self, content, prompt):
         """Creates a message using OpenAI's GPT-4o model."""

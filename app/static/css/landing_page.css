@@ -1,0 +1,239 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f2f2f0; /* More grayish sand color */
+    color: #333;
+}
+
+/* Navigation */
+nav {
+    padding: 2rem 5%;
+    background-color: transparent;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0052cc; /* Darker blue */
+    margin-bottom: 2rem;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li a {
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #9333ea;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #a855f7;
+    text-shadow: 
+        0 0 8px rgba(147, 51, 234, 0.6),
+        0 0 15px rgba(147, 51, 234, 0.4);
+}
+
+/* Hero Section */
+#hero {
+    min-height: 100vh;
+    background: linear-gradient(
+        to bottom right,
+        #f2f2f0,
+        #eaeae8
+    );
+    position: relative;
+    padding: 2rem 5%;
+}
+
+.hero-content {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 800px;
+}
+
+.hero-content h1 {
+    font-size: 4.5rem;
+    margin-bottom: 1.2rem;
+    color: #0052cc; /* Darker blue */
+    font-weight: bold;
+    letter-spacing: -0.02em;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #1a365d; /* Darker blue */
+    line-height: 1.4;
+    opacity: 0.9; /* Slightly reduce opacity for better blend with background */
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2.4rem;
+    font-size: 1.1rem;
+    background-color: #0052cc; /* Darker blue matching headings */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.cta-button:hover {
+    background-color: #004099; /* Even darker blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 82, 204, 0.15);
+}
+
+/* Optional: Add focus state for accessibility */
+.cta-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.3);
+}
+
+/* Features Section */
+#features {
+    padding: 5rem 10%;
+    background-color: #060f2e; /* Very dark blue background */
+    position: relative;
+    overflow: hidden;
+}
+
+#features h2 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-size: 2.2rem;
+    color: #e6e6e6; /* Light grey for main heading */
+    font-weight: bold;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.feature-card {
+    padding: 2rem;
+    background-color: #001e3d; /* Slightly lighter dark blue for cards */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.feature-card h3 {
+    font-size: 1.3rem;
+    margin: 0.8rem 0;
+    color: #e6e6e6; /* Light grey for card headings */
+    font-weight: 600;
+}
+
+.feature-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #cccccc; /* Slightly darker grey for paragraph text */
+    opacity: 0.9;
+}
+
+.feature-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.8rem;
+}
+
+/* Hover effects */
+.feature-card:hover {
+    transform: translateY(-5px);
+    background-color: #002952; /* Slightly lighter blue on hover */
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.2),
+        0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Bubbles styling */
+.bubbles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0, 82, 204, 0.05); /* Very subtle dark blue */
+    animation: float 20s linear infinite;
+}
+
+/* Create different sizes and starting positions */
+.bubble:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; }
+.bubble:nth-child(2) { width: 120px; height: 120px; left: 30%; animation-delay: 2s; }
+.bubble:nth-child(3) { width: 60px; height: 60px; left: 50%; animation-delay: 4s; }
+.bubble:nth-child(4) { width: 100px; height: 100px; left: 70%; animation-delay: 6s; }
+.bubble:nth-child(5) { width: 90px; height: 90px; left: 90%; animation-delay: 8s; }
+.bubble:nth-child(6) { width: 70px; height: 70px; left: 20%; animation-delay: 10s; }
+.bubble:nth-child(7) { width: 110px; height: 110px; left: 60%; animation-delay: 12s; }
+
+/* Floating animation */
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #0a0a0a;
+    border-top: 1px solid rgba(255, 217, 0, 0.1);
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+    
+    .hero-content {
+        left: 5%;
+        padding: 1rem;
+    }
+    
+    #features h2 {
+        font-size: 2rem;
+    }
+} 
