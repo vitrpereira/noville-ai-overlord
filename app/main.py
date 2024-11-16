@@ -9,8 +9,9 @@ from dotenv import load_dotenv, find_dotenv
 
 # From app
 from app.config.config import config
-from app.routes import bp
+from app.controllers.routes import bp
 from app.models.db import db
+from app.controllers.whatsapp_transcription_controller import blp as WhatsappTranscriptionController
 
 
 def create_app():
@@ -23,7 +24,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config.from_object(config[os.environ.get("FLASK_ENV", "development")])
     db.init_app(app)
-    migrate = Migrate(app, db)  # noqa: F841
+    migrate = Migrate(app, db)
 
     logger = logging.getLogger(__name__)
     logging.basicConfig(
@@ -33,6 +34,7 @@ def create_app():
     logger.info("Application started")
 
     app.register_blueprint(bp)
+    app.register_blueprint(WhatsappTranscriptionController)
 
     with app.app_context():
         db.create_all()
