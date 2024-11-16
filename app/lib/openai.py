@@ -31,7 +31,7 @@ class OpenAi:
             raise self.FailedToTrancribeAudioError(f"Failed to transcribe audio: {str(e)}")
 
     def create_message(self, content, prompt):
-        """Translates a text to Chinese using OpenAI's model."""
+        """Creates a message using OpenAI's GPT-4o model."""
 
         completion = self.openai.chat.completions.create(
             model="gpt-4o",
