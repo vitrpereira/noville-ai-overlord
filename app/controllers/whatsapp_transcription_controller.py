@@ -39,7 +39,9 @@ class WhatsappTranscriptionController(MethodView):
 
         try:
             phone_number = self._get_phone(data)
-            failed_message = "Ops, não conseguimos processar sua mensagem."
+            failed_message = "Ops, nosso serviço está indisponível no momento"
+            failed_message += " e não conseguimos processar sua mensagem."
+            failed_message += "\nPor favor, tente novamente em alguns instantes."
 
             if self._first_interaction(data, phone_number):
                 return '', 200
@@ -159,6 +161,13 @@ class WhatsappTranscriptionController(MethodView):
         if self._is_message_webhook(data):
             if 'text' in self._webhook_message_path(data):
                 message = "Ops! Parece que você enviou uma mensagem de texto. Por favor, *envie* ou *encaminhe* sua mensagem como um áudio."
+                message += "\n\nPor curiosidade, sabia que sua mensagem em mandarim fica assim? ⛩️🧧🥢"
+                message += "\n\n"
+
+                message += self.open_ai.create_message(
+                    self._webhook_message_path(data)['text']['body'],
+                    "You are an mandarim translator. Translate this text to mandarim."
+                )
                 return message
             return ''
         return ''
