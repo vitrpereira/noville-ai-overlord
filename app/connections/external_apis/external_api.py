@@ -8,6 +8,7 @@ class ExternalApi:
     """
     Parent class for all External APIs handling.
     """
+    class UnauthorizedError(Exception): pass
 
     @classmethod
     def perform(cls, endpoint_url, verb, payload, headers=None, retries=0):
@@ -27,7 +28,10 @@ class ExternalApi:
             logger.info(f"RESPONSE Body: {response.json()}")
 
             # Retry on rate limit exceeded or bad gateway
-            response = cls._retry_on_error(response, retries=retries)
+            response = cls._retry_on_error(response, retries=retries) if retries else response
+
+            if cls._unauthorized_response(response):
+                raise cls.UnauthorizedError('Unable to authenticate with external API')
 
             response.raise_for_status()
 
@@ -52,6 +56,12 @@ class ExternalApi:
                     response.request.headers
                 )
         return response
+    @classmethod
+    def _unauthorized_response(cls, response):
+        if response.status_code == 401:
+            logger.error(f"Unauthorized request: {response.json()}")
+            return True
+        return False
 
     @staticmethod
     def _event_timestamp():
