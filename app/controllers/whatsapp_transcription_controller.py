@@ -1,14 +1,19 @@
+# Standard library imports
+import logging
+import os
+from functools import cached_property
+
+# Third-party imports
+from dotenv import load_dotenv, find_dotenv
 from flask import request, Blueprint
 from flask.views import MethodView
-import requests
-import logging
-from dotenv import load_dotenv, find_dotenv
+
+# Local application imports
 from app.lib.openai import OpenAi
-import os
 from app.lib.audio_processor import AudioProcessor
 from app.models.user import User
 from app.models.product import Product
-from functools import cached_property
+from app.connections.external_apis.whatsapp_api import WhatsappApi as wpp_api
 
 load_dotenv(find_dotenv())
 logger = logging.getLogger("WhatsappTranscriptionController")
@@ -19,7 +24,6 @@ log_prefix = "[WhatsappTranscriptionController]"
 class WhatsappTranscriptionController(MethodView):
     def __init__(self):
         self.open_ai = OpenAi()
-        self.access_token = os.environ.get("WHATSAPP_ACCESS_TOKEN")
         self.product_name = 'whatsapp_transcription'
 
     def get(self):
@@ -50,65 +54,28 @@ class WhatsappTranscriptionController(MethodView):
                 message = self._process_text_message(data)
             else:
                 logger.error(f"Unhandled event type: {data}")
-                message = "Ops! Não podemos processar ainda este tipo de conteúdo."
-                message += " Mas não se preocupe, já estamos trabalhando para isso!"
-                message += "\n\nPor hora, você pode enviar ou encaminhar um áudio, e a gente transforma em texto pra você! 😊"
+                message = self._unable_to_process_message()
 
-            self.send_whatsapp_text_message(
+            wpp_api.send_text_message(
                 phone_number,
                 message
             )
             return '', 200
         except Exception as e:
             logger.error(f"Error: {e}")
-            self.send_whatsapp_text_message(
+            wpp_api.send_text_message(
                 phone_number,
                 self._failed_message()
             )
 
             return '', 200
-        
-    def send_whatsapp_text_message(self, phone_number, text=''):
-        phone_number_id = os.environ.get('WHATSAPP_PHONE_NUMBER_ID')
-
-        logger.info(f'SENDER PHONE NUMBER: {phone_number}')
-
-        body={
-            "messaging_product": "whatsapp",
-            "to": phone_number,
-            "type": "text",
-            "text": {"body": text}
-        }
-
-        self.send_whatsapp_message(body, phone_number_id)
-        return ""
-
-    def send_whatsapp_message(self, body, phone_number_id):
-        headers = {
-                "Authorization": f"Bearer {self.access_token}"
-            }
-        response = requests.post(
-            f"https://graph.facebook.com/v16.0/{phone_number_id}/messages", 
-            json=body, 
-            headers=headers
-        )
-
-        if response.status_code == 200:
-            logger.info(f"[SendWhatsappMessage] Message sent successfully")
-        else:
-            logger.error(f"[SendWhatsappMessage] Failed to send message: {response.status_code} - {response.text}")
-
-        return ""
 
     def _first_interaction(self, data, phone_number: str):
 
-        if User.exists_user_by_phone_number_and_product_id(
+        if User.exists_by_phone_number_and_product_id(
             phone_number, 
             self._product_id
         ):
-            logger.info(
-                f"User with phone number: '{phone_number}' already registered for '{self.product_name}' product"
-            )
             return False
 
         user_name = self._get_user_name(data)
@@ -120,9 +87,10 @@ class WhatsappTranscriptionController(MethodView):
         )
 
         self.send_welcome_message(phone_number, user_name)
+
         # Send audio message if user sends one in the first interaction
         if self._is_audio_message(data):
-            self.send_whatsapp_text_message(
+            wpp_api.send_text_message(
                 phone_number,
                 self._process_audio_message(data)
             )
@@ -134,7 +102,7 @@ class WhatsappTranscriptionController(MethodView):
         welcome_message += "\n\nPara utilizar o serviço, basta enviar ou encaminhar um áudio para este número."
         
         # Send welcome message
-        self.send_whatsapp_text_message(
+        wpp_api.send_text_message(
             phone_number,
             welcome_message
         )
@@ -225,9 +193,16 @@ class WhatsappTranscriptionController(MethodView):
     @staticmethod
     def _failed_message():
         failed_message = "Ops, nosso serviço está indisponível no momento e não conseguimos processar sua mensagem."
-        failed_message += "\nPor favor, tente novamente em alguns instantes."
+        failed_message += "\n\nPor favor, tente novamente em alguns instantes."
 
         return failed_message
+    
+    @staticmethod
+    def _unable_to_process_message():
+        unable_to_process_message = "Ops, nosso serviço está indisponível no momento e não conseguimos processar sua mensagem."
+        unable_to_process_message += "\n\nPor favor, tente novamente em alguns instantes."
+
+        return unable_to_process_message
 
 blp.add_url_rule(
     '/overlord/whatsapp/transcription',
