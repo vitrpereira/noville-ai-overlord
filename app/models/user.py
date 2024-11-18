@@ -47,12 +47,18 @@ class User(Base):
             raise exc
     
     @classmethod
-    def exists_user_by_phone_number_and_product_id(cls, phone_number: str, product_id: int) -> bool:
+    def exists_by_phone_number_and_product_id(cls, phone_number: str, product_id: int) -> bool:
         logger.info(
             f"Checking if user exists in database: Phone Number: {phone_number} - Product ID: {product_id}"
             )
 
-        return db.session.query(UserModel).filter_by(
+        if db.session.query(UserModel).filter_by(
             phone_number=phone_number,
             product_id=product_id
-        ).first() is not None
+        ).first() is not None:
+            logger.info(
+                f"User with phone number: '{phone_number}' already registered for '{product_id}' product"
+            )
+
+            return True
+        return False
