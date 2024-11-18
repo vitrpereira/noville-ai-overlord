@@ -24,7 +24,7 @@ class AudioProcessor:
         response = requests.get(url, headers=headers)
         
         if response.status_code == 200:
-            logger.info(f"{log_prefix} Fetchedd audio content {response.json()}")
+            logger.info(f"{log_prefix} Fetched audio content {response.json()}")
 
             audio_url = response.json().get("url")
             audio_response = requests.get(audio_url, headers=headers)
