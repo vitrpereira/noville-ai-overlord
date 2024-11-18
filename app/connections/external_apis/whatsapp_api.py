@@ -12,6 +12,22 @@ class WhatsappApi(ExternalApi):
     BASE_URL = "https://graph.facebook.com/v16.0"
 
     @classmethod
+    def send_text_message(cls, phone_number, text):
+        phone_number_id = os.environ.get('WHATSAPP_PHONE_NUMBER_ID')
+
+        logger.info(f'SENDER PHONE NUMBER: {phone_number}')
+
+        body = {
+            "messaging_product": "whatsapp",
+            "to": phone_number,
+            "type": "text",
+            "text": {"body": text}
+        }
+
+        cls.send_message(body, phone_number_id)
+        return
+
+    @classmethod
     def send_message(cls, body, phone_number_id):
         response = cls.perform(
             endpoint_url=f"{cls.BASE_URL}/{phone_number_id}/messages", 
@@ -24,11 +40,12 @@ class WhatsappApi(ExternalApi):
             logger.info(
                 f"[SendWhatsappMessage] Message sent successfully"
             )
-            return ''
+            return
         else:
             logger.error(
                 f"[SendWhatsappMessage] Failed to send message: {response.status_code} - {response.text}"
             )
+            return False
 
     @staticmethod
     def _headers():
