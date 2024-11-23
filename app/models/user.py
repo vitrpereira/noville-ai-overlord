@@ -11,10 +11,15 @@ class UserModel(db.Model):
     name = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     updated_at = db.Column(db.DateTime, nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    product_id = db.Column(
+        db.Integer,
+        db.ForeignKey('products.id'),
+        nullable=False
+    )
 
 
 logger = logging.getLogger("[UsersModel]")
+
 
 class User(Base):
 
@@ -45,11 +50,16 @@ class User(Base):
             return
         except Exception as exc:
             raise exc
-    
+
     @classmethod
-    def exists_by_phone_number_and_product_id(cls, phone_number: str, product_id: int) -> bool:
+    def exists_by_phone_number_and_product_id(
+        cls,
+        phone_number: str,
+        product_id: int
+    ) -> bool:
         logger.info(
-            f"Checking if user exists in database: Phone Number: {phone_number} - Product ID: {product_id}"
+            "Checking if user exists in database: "
+            f"Phone Number: {phone_number} - Product ID: {product_id}"
             )
 
         if db.session.query(UserModel).filter_by(
@@ -57,7 +67,8 @@ class User(Base):
             product_id=product_id
         ).first() is not None:
             logger.info(
-                f"User with phone number: '{phone_number}' already registered for '{product_id}' product"
+                f"User with phone number: '{phone_number}' already registered "
+                f"for '{product_id}' product"
             )
 
             return True

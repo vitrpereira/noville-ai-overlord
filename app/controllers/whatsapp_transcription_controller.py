@@ -29,7 +29,7 @@ class WhatsappTranscriptionController(MethodView):
     def get(self):
         verify_token = request.args.get('hub.verify_token')
         challenge = request.args.get('hub.challenge')
-        
+
         if verify_token == os.environ.get('WHATSAPP_PING_TOKEN'):
             return challenge, 200
         else:
@@ -39,7 +39,7 @@ class WhatsappTranscriptionController(MethodView):
         data = request.json
         logger.info(f"Received webhook data: {data}")
 
-        if self._is_event_status_webhook(data): 
+        if self._is_event_status_webhook(data):
             return '', 200
 
         try:
@@ -73,7 +73,7 @@ class WhatsappTranscriptionController(MethodView):
     def _first_interaction(self, data, phone_number: str):
 
         if User.exists_by_phone_number_and_product_id(
-            phone_number, 
+            phone_number,
             self._product_id
         ):
             return False
@@ -96,11 +96,11 @@ class WhatsappTranscriptionController(MethodView):
             )
 
         return True
-    
+
     def send_welcome_message(self, phone_number, user_name):
-        welcome_message = f"Olá, *{user_name}*! Seja bem-vindo ao bot de transcrição de áudio para texto da Noville!"
-        welcome_message += "\n\nPara utilizar o serviço, basta enviar ou encaminhar um áudio para este número."
-        
+        welcome_message = f"Olá, *{user_name}*! Seja bem-vindo ao bot de transcrição de áudio para texto da Noville!" # noqa
+        welcome_message += "\n\nPara utilizar o serviço, basta enviar ou encaminhar um áudio para este número." # noqa
+
         # Send welcome message
         wpp_api.send_text_message(
             phone_number,
@@ -108,7 +108,7 @@ class WhatsappTranscriptionController(MethodView):
         )
 
         return ""
-    
+
     @cached_property
     def _product_id(self):
         return Product.get_product_by_name(self.product_name).id
@@ -116,7 +116,7 @@ class WhatsappTranscriptionController(MethodView):
     def _process_audio_message(self, data):
         media_id = self._webhook_message_path(data)['audio']['id']
         audio_file = AudioProcessor.download_whatsapp_audio(media_id)
-        
+
         if audio_file:
             try:
                 transcription = self.open_ai.transcribe_audio(audio_file)
@@ -129,17 +129,17 @@ class WhatsappTranscriptionController(MethodView):
             message = self._failed_message()
 
         return message
-    
+
     def _process_text_message(self, data):
         if self._is_message_webhook(data):
             if 'text' in self._webhook_message_path(data):
-                message = "Ops! Parece que você enviou uma mensagem de texto. Por enquanto, podemos te ajudar somente com mensagens de *áudio*."
-                message += "\n\nMas por curiosidade, sabia que sua mensagem em mandarim fica assim? ⛩️🧧🥢"
+                message = "Ops! Parece que você enviou uma mensagem de texto. Por enquanto, podemos te ajudar somente com mensagens de *áudio*." # noqa
+                message += "\n\nMas por curiosidade, sabia que sua mensagem em mandarim fica assim? ⛩️🧧🥢" # noqa
                 message += "\n\n"
 
                 message += self.open_ai.create_message(
                     self._webhook_message_path(data)['text']['body'],
-                    "You are an mandarim translator. Translate this text to mandarim."
+                    "You are an mandarim translator. Translate this text to mandarim." # noqa
                 )
                 return message
             return ''
@@ -162,7 +162,7 @@ class WhatsappTranscriptionController(MethodView):
         return False
 
     def _is_message_webhook(self, data):
-        if 'messages' in self._basic_data_path(data): 
+        if 'messages' in self._basic_data_path(data):
             return True
         return False
 
@@ -171,7 +171,7 @@ class WhatsappTranscriptionController(MethodView):
             if 'audio' in self._webhook_message_path(data):
                 return True
         return False
-    
+
     def _is_text_message(self, data):
         if self._is_message_webhook(data):
             if 'text' in self._webhook_message_path(data):
@@ -180,31 +180,34 @@ class WhatsappTranscriptionController(MethodView):
 
     def _get_phone(self, data):
         return self._basic_data_path(data)['contacts'][0]['wa_id']
-    
+
     def _get_user_name(self, data):
         return self._basic_data_path(data)['contacts'][0]['profile']['name']
 
     def _basic_data_path(self, data):
         return data['entry'][0]['changes'][0]['value']
-    
+
     def _webhook_message_path(self, data):
         return self._basic_data_path(data)['messages'][0]
-    
+
     @staticmethod
     def _failed_message():
-        failed_message = "Ops, nosso serviço está indisponível no momento e não conseguimos processar sua mensagem."
+        failed_message = "Ops, nosso serviço está indisponível no momento e não conseguimos processar sua mensagem." # noqa
         failed_message += "\n\nPor favor, tente novamente em alguns instantes."
 
         return failed_message
-    
+
     @staticmethod
     def _unable_to_process_message():
-        unable_to_process_message = "Ops, nosso serviço está indisponível no momento e não conseguimos processar sua mensagem."
-        unable_to_process_message += "\n\nPor favor, tente novamente em alguns instantes."
+        unable_to_process_message = "Ops, nosso serviço está indisponível no momento e não conseguimos processar sua mensagem." # noqa
+        unable_to_process_message += "\n\nPor favor, tente novamente em alguns instantes." # noqa
 
         return unable_to_process_message
 
+
 blp.add_url_rule(
     '/overlord/whatsapp/transcription',
-    view_func=WhatsappTranscriptionController.as_view('whatsapp_transcription_controller')
+    view_func=WhatsappTranscriptionController.as_view(
+        'whatsapp_transcription_controller'
+    )
 )
