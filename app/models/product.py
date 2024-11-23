@@ -11,9 +11,11 @@ class ProductModel(db.Model):
     created_at = db.Column(db.DateTime, nullable=False)
     updated_at = db.Column(db.DateTime, nullable=False)
 
+
 logger = logging.getLogger("[ProductModel]")
+
 
 class Product(Base):
     @classmethod
     def get_product_by_name(cls, product_name: str) -> ProductModel:
-        return db.session.query(ProductModel).filter_by(name=product_name).first()
+        return db.session.query(ProductModel).filter_by(name=product_name).first() # noqa

@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template
 
 landing_page = Blueprint('landing_page', __name__)
+
 
 @landing_page.route('/')
 def index():

@@ -9,11 +9,15 @@ from dotenv import load_dotenv, find_dotenv
 
 # From app
 from app.config.config import config
-from app.controllers.routes import bp
 from app.models.db import db
-from app.controllers.whatsapp_transcription_controller import blp as WhatsappTranscriptionController
-from app.controllers.landing_page_controller import landing_page as LandingPageController
+from app.controllers.whatsapp_transcription_controller import (
+    blp as WhatsappTranscriptionController
+)
+from app.controllers.landing_page_controller import (
+    landing_page as LandingPageController
+)
 from app.controllers.register_controller import register as RegisterController
+
 
 def create_app():
     app = Flask(__name__)
@@ -25,9 +29,9 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config.from_object(config[os.environ.get("FLASK_ENV", "development")])
     db.init_app(app)
-    migrate = Migrate(app, db)
+    migrate = Migrate(app, db) # noqa
 
-    app.secret_key = os.environ.get('FLASK_SECRET_KEY')  # In production, use environment variable
+    app.secret_key = os.environ.get('FLASK_SECRET_KEY')
 
     logger = logging.getLogger(__name__)
     logging.basicConfig(
@@ -36,7 +40,6 @@ def create_app():
     )
     logger.info("Application started")
 
-    app.register_blueprint(bp)
     app.register_blueprint(WhatsappTranscriptionController)
     app.register_blueprint(LandingPageController)
     app.register_blueprint(RegisterController)

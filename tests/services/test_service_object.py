@@ -34,7 +34,7 @@ def test_successful_service():
     """Test a service that executes successfully"""
     expected_value = {"data": "test"}
     service = SuccessfulService(expected_value)
-    
+
     assert service.success is True
     assert service.result == expected_value
     assert service.errors == []

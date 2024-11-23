@@ -1,3 +1,5 @@
+# flake8: noqa
+
 import requests
 import os
 from dotenv import load_dotenv, find_dotenv
