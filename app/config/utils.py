@@ -2,9 +2,15 @@ from flask import request, jsonify
 import os
 from dotenv import load_dotenv, find_dotenv
 import yaml
+import jsonschema
+from jsonschema import validate
+import json
+import logging
+
 
 load_dotenv(find_dotenv())
 bots_config_file = "app/config/bots_config.yml"
+logger = logging.getLogger(__name__)
 
 
 def require_api_key(func):
@@ -41,3 +47,24 @@ def openai_model_version():
             raise Exception(
                 f"An exception occurred while loading config files: {exc}"
             )
+
+
+def validate_json_schema(schema):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            try:
+                request_json = request.json
+                validate(request_json, schema)
+                return func(*args, **kwargs)
+            except jsonschema.exceptions.ValidationError as e:
+                logger.error(f"Validation error: {e}")
+                return jsonify({"error": str(e.message)}), 400
+
+        return wrapper
+    return decorator
+
+
+def retrieve_json_schema(schema_name):
+    base_path = 'app/config/api_schemas'
+    with open(f"{base_path}/{schema_name}.json") as schema_file:
+        return json.load(schema_file)
