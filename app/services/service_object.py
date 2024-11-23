@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
-from functools import cached_property
-from typing import Any, List, Dict
+from functools import lru_cache, cached_property
+from typing import Any, List, Dict, Callable
 
+# flake8: noqa: E501
 class ServiceObject(ABC):
     """
     ServiceObject is an abstract base class that provides a standardized way to encapsulate business logic.
     It follows the Service Object pattern, where each concrete implementation represents a single business operation.
 
-    The class provides error handling, result caching, and a consistent interface through the following key methods:
+    The class provides error handling, result caching, and a consistent 
+    interface through the following key methods:
     - call(): Abstract method that contains the main business logic
     - result(): Cached property that executes and returns the result of call()
     - success(): Property that indicates if the operation completed without errors
@@ -54,8 +56,8 @@ class ServiceObject(ABC):
     def __init__(self):
         self._errors = []
 
+    @lru_cache
     @abstractmethod
-    @cached_property
     def call(self) -> Any:
         """
         Abstract method that contains the main business logic of the service object.
