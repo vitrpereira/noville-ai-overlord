@@ -73,3 +73,7 @@ class User(Base):
 
             return True
         return False
+
+    @classmethod
+    def get_user_by_id(cls, user_id: int) -> UserModel:
+        return db.session.query(UserModel).filter_by(id=user_id).first()
